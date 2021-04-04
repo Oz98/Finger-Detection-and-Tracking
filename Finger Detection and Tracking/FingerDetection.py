@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pyautogui
 
 hand_hist = None
 traverse_point = []
@@ -132,6 +133,16 @@ def manage_image_opr(frame, hand_hist):
         defects = cv2.convexityDefects(max_cont, hull)
         far_point = farthest_point(defects, max_cont, cnt_centroid)
         print("Centroid : " + str(cnt_centroid) + ", farthest Point : " + str(far_point))
+        #usar farthest_point aqui para el mouse
+        puntox=far_point[0]*(1920/640)
+        if (far_point[1])<=235:
+            puntoyf=(far_point[1]-(60*(1-((far_point[1]-60)/180))))*(1080/480)
+        elif (far_point[1])>=245:
+            puntoyf=(far_point[1]+(60*((far_point[1]-245)/175)))*(1080/480)
+        else:
+            puntoyf=(far_point[1])*(1080/480)
+        pyautogui.moveTo(puntox,puntoyf)
+        #######################################
         cv2.circle(frame, far_point, 5, [0, 0, 255], -1)
         if len(traverse_point) < 20:
             traverse_point.append(far_point)
