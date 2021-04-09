@@ -149,7 +149,7 @@ def manage_image_opr(frame, hand_hist):
 
         #######################################
         cv2.circle(frame, far_point, 5, [0, 0, 255], -1)
-        if len(traverse_point) < 20:
+        if len(traverse_point) < 2:
             traverse_point.append(far_point)
         else:
             traverse_point.pop(0)
@@ -160,15 +160,21 @@ def manage_image_opr(frame, hand_hist):
 
 def main():
     inicio=True
-    frame_counter = 0
+    counter = 0
     ##############################
     global hand_hist
     is_hand_hist_created = False
     #capture = cv2.VideoCapture(0)
-    capture = cv2.VideoCapture("vid/vid0.mp4")
-    while capture.isOpened():
-        pressed_key = cv2.waitKey(1)
-        _, frame = capture.read()
+
+    #capture = cv2.VideoCapture("vid/vid0.mp4")
+    while 1:
+        nom="img"+str(counter)+".jpg"
+        capture = cv2.imread(nom)
+        counter+=1
+        pressed_key = cv2.waitKey(500)
+        #_, frame = capture.read()
+        frame = capture
+        '''''''''
         ###########################
         frame_counter += 1
         if (frame_counter == capture.get(cv2.CAP_PROP_FRAME_COUNT)):
@@ -176,6 +182,7 @@ def main():
             capture.set(cv2.CAP_PROP_POS_FRAMES , 0)
             frame_counter=0
         ###########################
+        '''''''''
         frame = cv2.flip(frame, 1)
 
         if pressed_key & 0xFF == ord('z'):
@@ -189,15 +196,18 @@ def main():
             frame = draw_rect(frame)
 
         #cv2.imshow("Live Feed", rescale_frame(frame))
-        cv2.imshow("Video",rescale_frame(frame))
+        cv2.imshow("Output",rescale_frame(frame))
+        #cv2.imshow("Video",rescale_frame(frame))
         if inicio:
             cv2.waitKey(-1)
             inicio=False
+        if counter==35:
+            counter=0
         if pressed_key == 27:
             break
 
     cv2.destroyAllWindows()
-    capture.release()
+    #capture.release()
 
 
 if __name__ == '__main__':
